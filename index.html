@@ -1,0 +1,38 @@
+<html>
+
+<head>
+  <!-- Get the tools from the horse's mouth: https://developers.google.com/feed/v1/devguide & https://cloud.google.com/translate/docs -->
+  <!-- And use http://www.labnol.org/internet/twitter-rss-feed/28149/ to get your Twitter feed into RSS using Google Scripts -->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("feeds", "1");
+
+    function initialize() {
+      var feed = new google.feeds.Feed("http://medium.com/feed/@robsafar");
+      feed.load(function(result) {
+        if (!result.error) {
+          var container = document.getElementById("feed");
+          for (var i = 0; i < result.feed.entries.length; i++) {
+            var entry = result.feed.entries[i];
+            var div = document.createElement("div");
+            div.className = "feed-Medium";
+            var link = div.appendChild(document.createElement("a"));
+            link.href = entry.link;
+            link.appendChild(document.createTextNode(entry.title));
+            var span = div.appendChild(document.createElement("span"));
+            var info = entry.contentSnippet.replace("Continue reading on Medium", "");
+            span.innerHTML = ' - ' + info;
+            container.appendChild(div);
+          }
+        }
+      });
+    }
+    google.setOnLoadCallback(initialize);
+  </script>
+</head>
+
+<body>
+  <div id="feed"></div>
+</body>
+
+</html>

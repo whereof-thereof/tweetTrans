@@ -1,6 +1,20 @@
 <html>
-
+<!-- Well, shit. Google Translate API isn't free. Lemme get back to you on that. -->
 <head>
+  <style type="text/css">
+    html {
+      font-family: sans-serif;
+      font-size: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tweetContainer {
+      display: block;
+      margin-bottom: 50px;
+    }
+  </style>
   <!-- Get the tools from the horse's mouth: https://developers.google.com/feed/v1/devguide & https://cloud.google.com/translate/docs -->
   <!-- And use http://www.labnol.org/internet/twitter-rss-feed/28149/ to get your Twitter feed into RSS using Google Scripts -->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -9,24 +23,32 @@
 
     function initialize() {
       var feed = new google.feeds.Feed("https://script.google.com/macros/s/AKfycbwadBNa3xWMy5_H-1AYXYUZSRjqAlAbsEd7ORGbK8B-nY6CXeq5/exec?707961925687234561");
+      // feed.setNumEntries(20);
       feed.load(function(result) {
         if (!result.error) {
-          var container = document.getElementById("feed");
+          var container = document.getElementById("tweetsFeed");
           for (var i = 0; i < result.feed.entries.length; i++) {
             var entry = result.feed.entries[i];
-            var div = document.createElement("div");
-            div.className = "feed-Medium";
-            var link = div.appendChild(document.createElement("a"));
+
+            // Create the container
+            var tweetDiv = document.createElement("div");
+            tweetDiv.className = "tweetContainer";
+
+            // Create the translated title area
+            var link = tweetDiv.appendChild(document.createElement("a"));
+            link.className = "translateThis";
             var cleanLink = entry.link.replace("#labnol", "");
             link.href = cleanLink;
+            // Clean up and add the content into the translation area  <-- not yet clean!
             link.appendChild(document.createTextNode(entry.title));
 
-            // This needs fixing:
-            var span = div.appendChild(document.createElement("span"));
-            var info = entry.contentSnippet.replace("Continue reading on Medium", "");
-            span.innerHTML = ' - ' + info;
+            // Display the original content below (with links)
+            var contentPara = tweetDiv.appendChild(document.createElement("p"));
+            contentPara.className = "originalTweetContent"
+            var tweetContent = entry.content.replace("?source=ctrlq.org", "");
+            contentPara.innerHTML = tweetContent;
 
-            container.appendChild(div);
+            container.appendChild(tweetDiv);
           }
         }
       });
@@ -36,7 +58,7 @@
 </head>
 
 <body>
-  <div id="feed"></div>
+  <div id="tweetsFeed"></div>
 </body>
 
 </html>

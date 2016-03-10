@@ -8,7 +8,7 @@
     google.load("feeds", "1");
 
     function initialize() {
-      var feed = new google.feeds.Feed("http://medium.com/feed/@robsafar");
+      var feed = new google.feeds.Feed("https://script.google.com/macros/s/AKfycbwadBNa3xWMy5_H-1AYXYUZSRjqAlAbsEd7ORGbK8B-nY6CXeq5/exec?707961925687234561");
       feed.load(function(result) {
         if (!result.error) {
           var container = document.getElementById("feed");
@@ -17,11 +17,15 @@
             var div = document.createElement("div");
             div.className = "feed-Medium";
             var link = div.appendChild(document.createElement("a"));
-            link.href = entry.link;
+            var cleanLink = entry.link.replace("#labnol", "");
+            link.href = cleanLink;
             link.appendChild(document.createTextNode(entry.title));
+
+            // This needs fixing:
             var span = div.appendChild(document.createElement("span"));
             var info = entry.contentSnippet.replace("Continue reading on Medium", "");
             span.innerHTML = ' - ' + info;
+
             container.appendChild(div);
           }
         }
